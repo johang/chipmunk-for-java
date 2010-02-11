@@ -42,4 +42,3 @@ chipmunk.jar:
 
 chipmunk-demo.jar:
 	$(MAKE) -C chipmunk-java-demo
-

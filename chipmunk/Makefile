@@ -48,4 +48,3 @@ clean:
 	rm -f src/*.o src/constraints/*.o
 	rm -f src/*.d src/constraints/*.d
 	rm -f libchipmunk.a
-

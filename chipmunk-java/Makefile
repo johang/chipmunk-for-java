@@ -1,9 +1,10 @@
 # Chipmunk for Java
-# Java bindings for Chipmunk, the 2D physics library
+# Java bindings for the Chipmunk 2D physics library
+# 
 # http://github.com/johang/chipmunk-for-java
-
+# 
 # Copyright 2010, Johan Gunnarsson, johan.gunnarsson@gmail.com
-
+# 
 # Chipmunk for Java is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -51,4 +52,3 @@ $(JARFILE): $(CHIPMUNKJAVA_JAVA_FILES)
 clean:
 	rm -rf $(BINPATH) $(HEADERPATH)
 	rm -f $(JARFILE)
-
