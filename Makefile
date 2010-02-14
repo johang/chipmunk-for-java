@@ -18,9 +18,21 @@
 # You should have received a copy of the GNU General Public License
 # along with Chipmunk for Java.  If not, see <http://www.gnu.org/licenses/>.
 
-.PHONY: all clean
+.PHONY: \
+	all \
+	clean \
+	run-demo \
+	chipmunk-demo.jar \
+	libchipmunk-jni.so \
+	libchipmunk.a \
+	chipmunk.jar \
 
-all: libchipmunk-jni.so chipmunk.jar
+all: \
+	libchipmunk-jni.so \
+	chipmunk-demo.jar \
+
+run-demo: all
+	java -Djava.library.path=. -cp chipmunk-demo.jar:chipmunk.jar johang.chipmunk.demo1.Balls
 
 clean:
 	rm -f libchipmunk-jni.so libchipmunk.a chipmunk.jar chipmunk-demo.jar
@@ -28,7 +40,7 @@ clean:
 	$(MAKE) -C chipmunk-jni clean
 	$(MAKE) -C chipmunk-java clean
 
-libchipmunk-jni.so: libchipmunk.a
+libchipmunk-jni.so: libchipmunk.a chipmunk.jar
 	$(MAKE) -C chipmunk-jni
 	cp chipmunk-jni/libchipmunk-jni.so .
 
@@ -42,3 +54,4 @@ chipmunk.jar:
 
 chipmunk-demo.jar:
 	$(MAKE) -C chipmunk-java-demo
+	cp chipmunk-java-demo/chipmunk-demo.jar .

@@ -39,12 +39,12 @@ CHIPMUNK_SRC_FILES := \
 
 all: libchipmunk.a
 
--include $(CHIPMUNK_SRC_FILES:.c=.d)
+-include $(CHIPMUNK_SRC_FILES:%.c=%.d)
 
-libchipmunk.a: $(CHIPMUNK_SRC_FILES:.c=.o)
-	ar -r libchipmunk.a $^
+libchipmunk.a: $(CHIPMUNK_SRC_FILES:%.c=%.o)
+	$(AR) -src libchipmunk.a $^
 
 clean:
-	rm -f src/*.o src/constraints/*.o
-	rm -f src/*.d src/constraints/*.d
-	rm -f libchipmunk.a
+	$(RM) -f src/*.o src/constraints/*.o
+	$(RM) -f src/*.d src/constraints/*.d
+	$(RM) -f libchipmunk.a

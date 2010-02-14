@@ -22,7 +22,7 @@ GPLv3.
 
 ### For compiling
 
-1. JDK (sun-java6-jdk, openjdk-6-jdk or gcj-4.4-jdk.)
+1. JDK (like sun-java6-jdk, openjdk-6-jdk or gcj-4.4-jdk.)
 2. C compiler (like gcc.)
 
 ### For running

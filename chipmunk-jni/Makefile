@@ -18,35 +18,39 @@
 # You should have received a copy of the GNU General Public License
 # along with Chipmunk for Java.  If not, see <http://www.gnu.org/licenses/>.
 
-JAVA_HOME = /usr/lib/jvm/java-6-sun
+JAVA_HOME := /usr/lib/jvm/java-6-sun
 
 CPPFLAGS = \
 	-I"$(JAVA_HOME)/include" \
 	-I"$(JAVA_HOME)/include/linux" \
 	-I"../chipmunk/include/chipmunk" \
 	-I"./src" \
+	-I"../chipmunk-java/include" \
 	-MMD \
 	-MP \
 	-MF"$(@:%.o=%.d)" \
 	-MT"$(@:%.o=%.d)" \
 
-LDFLAGS = \
-	-L".." \
-	-lchipmunk \
-	-L"$(JAVA_HOME)/jre/lib/i386/client" \
-	-ljvm \
-	-shared \
+CFLAGS := \
+	-Wall \
 
-CHIPMUNKJNI_SRC_FILES := $(wildcard src/*.cpp)
+LDFLAGS := \
+	-shared \
+	-L".." \
+	-L"$(JAVA_HOME)/jre/lib/i386/client" \
+	-lchipmunk \
+	-ljvm \
+
+CHIPMUNKJNI_SRC_FILES := $(wildcard src/*.c)
 
 .PHONY: all clean
 
 all: libchipmunk-jni.so
 
--include $(CHIPMUNKJNI_SRC_FILES:.cpp=.d)
+-include $(CHIPMUNKJNI_SRC_FILES:%.c=%.d)
 
-libchipmunk-jni.so: $(CHIPMUNKJNI_SRC_FILES:.cpp=.o)
-	$(CXX) -o "$@" $^ $(LDFLAGS)
+libchipmunk-jni.so: $(CHIPMUNKJNI_SRC_FILES:%.c=%.o)
+	$(CC) -o "$@" $^ $(LDFLAGS)
 
 clean:
 	rm -f src/*.o
