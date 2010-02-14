@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Chipmunk for Java.  If not, see <http://www.gnu.org/licenses/>.
 
-JAVA_HOME := /usr/lib/jvm/java-6-sun
+JAVA_HOME := /usr/lib/jvm/default-java
 
 CPPFLAGS = \
 	-I"$(JAVA_HOME)/include" \
