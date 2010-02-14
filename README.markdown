@@ -2,23 +2,26 @@
 
 ## What is Chipmunk for Java?
 
-Java bindings for Chipmunk physics library.
+Java bindings for the Chipmunk 2D physics library.
 
 ## Author
 
-Johan Gunnarsson
-johan.gunnarsson@gmail.com
-http://johan.gunnarsson.name/
+### Johan Gunnarsson
 
-## Web site
+ * johan.gunnarsson@gmail.com
+ * [http://johan.gunnarsson.name/]
 
-http://github.com/johang/chipmunk-for-java
+## Website
+
+[http://github.com/johang/chipmunk-for-java]
 
 ## License
 
 GPLv3.
 
 ## Requirements
+
+Tested and developed on Ubuntu/Linux. May or may not compile and run on other platforms.
 
 ### For compiling
 
