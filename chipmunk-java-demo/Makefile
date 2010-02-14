@@ -18,41 +18,30 @@
 # You should have received a copy of the GNU General Public License
 # along with Chipmunk for Java.  If not, see <http://www.gnu.org/licenses/>.
 
-.PHONY: \
-	all \
-	clean \
-	run-demo \
-	chipmunk-demo.jar \
-	libchipmunk-jni.so \
-	libchipmunk.a \
-	chipmunk.jar \
+SRCPATH := ./src
+BINPATH := ./bin
+JARFILE := chipmunk-demo.jar
+CHIPMUNKJAR := ../chipmunk.jar
 
-all: \
-	libchipmunk-jni.so \
-	chipmunk-demo.jar \
+CHIPMUNKJAVADEMO_JAVA_FILES := \
+	$(SRCPATH)/johang/chipmunk/demo1/Ball.java \
+	$(SRCPATH)/johang/chipmunk/demo1/Panel.java \
+	$(SRCPATH)/johang/chipmunk/demo1/Border.java \
+	$(SRCPATH)/johang/chipmunk/demo1/Balls.java \
+	$(SRCPATH)/johang/chipmunk/demo1/Drawable.java \
+	$(SRCPATH)/johang/chipmunk/reusable/CompositeShape.java \
+	$(SRCPATH)/johang/chipmunk/reusable/ShallowBoxShape.java \
+	$(SRCPATH)/johang/chipmunk/reusable/SuperSpace.java \
 
-run-demo: all
-	java -Djava.library.path=. -cp chipmunk-demo.jar:chipmunk.jar johang.chipmunk.demo1.Balls
+.PHONY: all clean
+
+all: $(JARFILE)
+
+$(JARFILE): $(CHIPMUNKJAVADEMO_JAVA_FILES)
+	mkdir -p $(BINPATH)
+	javac -cp $(CHIPMUNKJAR) -d $(BINPATH) -sourcepath $(SRCPATH) $(CHIPMUNKJAVADEMO_JAVA_FILES)
+	jar cf $@ -C $(BINPATH) .
 
 clean:
-	rm -f libchipmunk-jni.so libchipmunk.a chipmunk.jar chipmunk-demo.jar
-	$(MAKE) -C chipmunk clean
-	$(MAKE) -C chipmunk-jni clean
-	$(MAKE) -C chipmunk-java clean
-	$(MAKE) -C chipmunk-java-demo clean
-
-libchipmunk-jni.so: libchipmunk.a chipmunk.jar
-	$(MAKE) -C chipmunk-jni
-	cp chipmunk-jni/libchipmunk-jni.so .
-
-libchipmunk.a:
-	$(MAKE) -C chipmunk
-	cp chipmunk/libchipmunk.a .
-
-chipmunk.jar:
-	$(MAKE) -C chipmunk-java
-	cp chipmunk-java/chipmunk.jar .
-
-chipmunk-demo.jar:
-	$(MAKE) -C chipmunk-java-demo
-	cp chipmunk-java-demo/chipmunk-demo.jar .
+	rm -rf $(BINPATH)
+	rm -f $(JARFILE)
