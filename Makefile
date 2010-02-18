@@ -38,8 +38,8 @@ clean:
 	rm -f libchipmunk-jni.so libchipmunk.a chipmunk.jar chipmunk-demo.jar
 	$(MAKE) -C chipmunk clean
 	$(MAKE) -C chipmunk-jni clean
-	$(MAKE) -C chipmunk-java clean
-	$(MAKE) -C chipmunk-java-demo clean
+	ant -f chipmunk-java/build.xml clobber
+	ant -f chipmunk-java-demo/build.xml clobber
 
 libchipmunk-jni.so: libchipmunk.a chipmunk.jar
 	$(MAKE) -C chipmunk-jni
@@ -50,9 +50,9 @@ libchipmunk.a:
 	cp chipmunk/libchipmunk.a .
 
 chipmunk.jar:
-	$(MAKE) -C chipmunk-java
+	ant -f chipmunk-java/build.xml jar
 	cp chipmunk-java/chipmunk.jar .
 
 chipmunk-demo.jar:
-	$(MAKE) -C chipmunk-java-demo
+	ant -f chipmunk-java-demo/build.xml jar
 	cp chipmunk-java-demo/chipmunk-demo.jar .
