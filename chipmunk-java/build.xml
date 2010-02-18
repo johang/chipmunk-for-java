@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+Chipmunk for Java
+Java bindings for the Chipmunk 2D physics library
+
+http://github.com/johang/chipmunk-for-java
+
+Copyright 2010, Johan Gunnarsson, johan.gunnarsson@gmail.com
+
+Chipmunk for Java is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Chipmunk for Java is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Chipmunk for Java.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<project
+	name="chipmunk-java"
+	default="compile">
+	<target
+		name="clean"
+		description="Remove intermediate files">
+		<delete dir="bin"/>
+		<delete dir="include"/>
+	</target>
+	<target
+		name="clobber"
+		depends="clean"
+		description="Remove all artifact files">
+		<delete file="chipmunk.jar"/>
+	</target>
+	<target
+		name="compile"
+		description="Compile the Java source code to class files">
+		<mkdir
+			dir="bin"/>
+		<mkdir
+			dir="include"/>
+		<javac
+			srcdir="src"
+			destdir="bin"/>
+		<javah
+			destdir="include"
+			force="yes">
+			<classpath>
+				<pathelement location="bin/"/>
+			</classpath>
+			<class name="johang.chipmunk.Space"/>
+			<class name="johang.chipmunk.Chipmunk"/>
+			<class name="johang.chipmunk.CircleShape"/>
+			<class name="johang.chipmunk.Body"/>
+			<class name="johang.chipmunk.Shape"/>
+			<class name="johang.chipmunk.SegmentShape"/>
+		</javah>
+	</target>
+	<target
+		name="jar"
+		depends="compile"
+		description="Create a Jar file for the application">
+		<jar
+			destfile="chipmunk.jar">
+			<fileset
+				dir="bin"
+				includes="**/*.class"/>
+		</jar>
+	</target>
+</project>

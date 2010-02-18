@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+Chipmunk for Java
+Java bindings for the Chipmunk 2D physics library
+
+http://github.com/johang/chipmunk-for-java
+
+Copyright 2010, Johan Gunnarsson, johan.gunnarsson@gmail.com
+
+Chipmunk for Java is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Chipmunk for Java is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Chipmunk for Java.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<project
+	name="chipmunk-java-demo"
+	default="compile">
+	<target
+		name="clean"
+		description="Remove intermediate files">
+		<delete dir="bin"/>
+	</target>
+	<target
+		name="clobber"
+		depends="clean"
+		description="Remove all artifact files">
+		<delete file="chipmunk-demo.jar"/>
+	</target>
+	<target
+		name="compile"
+		description="Compile the Java source code to class files">
+		<mkdir
+			dir="bin"/>
+		<javac
+			srcdir="src"
+			destdir="bin">
+			<classpath>
+				<pathelement location="../chipmunk.jar"/>
+			</classpath>
+		</javac>
+	</target>
+	<target
+		name="jar"
+		depends="compile"
+		description="Create a Jar file for the application">
+		<jar
+			destfile="chipmunk-demo.jar">
+			<fileset
+				dir="bin"
+				includes="**/*.class"/>
+		</jar>
+	</target>
+</project>
