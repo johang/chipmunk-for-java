@@ -13,7 +13,7 @@ module CP
 				raise "This CP::Object (#{self.class}) did not call #init_chipmunk_object."
 			end
 		end
-		
+
 		private
 		# Should be called during initialization of a CP::Object to set what primitive
 		# and composite Chipmunk objects this object references.
@@ -24,68 +24,68 @@ module CP
 			@chipmunk_objects = objs.inject([]){|sum, obj| sum + obj.chipmunk_objects}.uniq
 		end
 	end
-	
+
 	class Body
 		include CP::Object
 
 		def chipmunk_objects
 			[self]
 		end
-		
+
 		def add_to_space(space)
 			space.add_body(self)
 		end
-		
+
 		def remove_from_space(space)
 			space.remove_body(self)
 		end
 	end
-	
+
 	module Shape
 		include CP::Object
-		
+
 		def chipmunk_objects
 			[self]
 		end
-		
+
 		def add_to_space(space)
 			space.add_shape(self)
 		end
-		
+
 		def remove_from_space(space)
 			space.remove_shape(self)
 		end
 	end
-		
+
 	module Constraint
 		include CP::Object
-		
+
 		def chipmunk_objects
 			[self]
 		end
-		
+
 		def add_to_space(space)
 			space.add_constraint(self)
 		end
-		
+
 		def remove_from_space(space)
 			space.remove_constraint(self)
 		end
 	end
-	
+
 	class Space
 		def add_object(obj)
 			obj.chipmunk_objects.each{|elt| elt.add_to_space(self)}
 		end
-		
+
 		def add_objects(*objs)
 			objs.each{|obj| add_object(obj)}
 		end
-		
+
 		def remove_object(obj)
 			obj.chipmunk_objects.each{|elt| elt.remove_from_space(self)}
 		end
-		
+
 		def remove_objects(*objs)
 			objs.each{|obj| remove_object(obj)}
 		end
@@ -100,24 +100,24 @@ module CP
 		def initialize
 			super(Float::INFINITY, Float::INFINITY)
 		end
-		
+
 		def chipmunk_objects
 			# return [] instead of [self] so the static body will not be added.
 			[]
 		end
 	end
-	
+
 	module StaticShape
 		include Shape
-		
+
 		class Circle < Shape::Circle
 			include StaticShape
 		end
-		
+
 		class Segment < Shape::Segment
 			include StaticShape
 		end
-		
+
 		class Poly < Shape::Poly
 			include StaticShape
 		end
@@ -125,7 +125,7 @@ module CP
 		def add_to_space(space)
 			space.add_static_shape(self)
 		end
-		
+
 		def remove_from_space(space)
 			space.remove_static_shape(self)
 		end

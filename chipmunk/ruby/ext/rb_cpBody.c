@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 #include <stdlib.h>
 #include "chipmunk.h"
 
@@ -39,7 +39,7 @@ rb_cpBodyInitialize(VALUE self, VALUE m, VALUE i)
 {
 	cpBody *body = BODY(self);
 	cpBodyInit(body, NUM2DBL(m), NUM2DBL(i));
-	
+
 	return self;
 }
 
@@ -210,7 +210,7 @@ Init_cpBody(void)
 	rb_define_method(c_cpBody, "initialize", rb_cpBodyInitialize, 2);
 
 	rb_define_method(c_cpBody, "m" , rb_cpBodyGetMass, 0);
-	rb_define_method(c_cpBody, "i" , rb_cpBodyGetMoment, 0);	
+	rb_define_method(c_cpBody, "i" , rb_cpBodyGetMoment, 0);
 	rb_define_method(c_cpBody, "p" , rb_cpBodyGetPos, 0);
 	rb_define_method(c_cpBody, "v" , rb_cpBodyGetVel, 0);
 	rb_define_method(c_cpBody, "f" , rb_cpBodyGetForce, 0);
@@ -218,7 +218,7 @@ Init_cpBody(void)
 	rb_define_method(c_cpBody, "w" , rb_cpBodyGetAVel, 0);
 	rb_define_method(c_cpBody, "t" , rb_cpBodyGetTorque, 0);
 	rb_define_method(c_cpBody, "rot", rb_cpBodyGetRot, 0);
-	
+
 	rb_define_method(c_cpBody, "m=", rb_cpBodySetMass, 1);
 	rb_define_method(c_cpBody, "i=", rb_cpBodySetMoment, 1);
 	rb_define_method(c_cpBody, "p=", rb_cpBodySetPos, 1);
@@ -227,9 +227,9 @@ Init_cpBody(void)
 	rb_define_method(c_cpBody, "a=", rb_cpBodySetAngle, 1);
 	rb_define_method(c_cpBody, "w=", rb_cpBodySetAVel, 1);
 	rb_define_method(c_cpBody, "t=", rb_cpBodySetTorque, 1);
-	
+
 	rb_define_method(c_cpBody, "mass" , rb_cpBodyGetMass, 0);
-	rb_define_method(c_cpBody, "moment" , rb_cpBodyGetMoment, 0);	
+	rb_define_method(c_cpBody, "moment" , rb_cpBodyGetMoment, 0);
 	rb_define_method(c_cpBody, "pos" , rb_cpBodyGetPos, 0);
 	rb_define_method(c_cpBody, "vel" , rb_cpBodyGetVel, 0);
 	rb_define_method(c_cpBody, "force" , rb_cpBodyGetForce, 0);
@@ -237,7 +237,7 @@ Init_cpBody(void)
 	rb_define_method(c_cpBody, "ang_vel" , rb_cpBodyGetAVel, 0);
 	rb_define_method(c_cpBody, "torque" , rb_cpBodyGetTorque, 0);
 	rb_define_method(c_cpBody, "rot", rb_cpBodyGetRot, 0);
-	
+
 	rb_define_method(c_cpBody, "mass=", rb_cpBodySetMass, 1);
 	rb_define_method(c_cpBody, "moment=", rb_cpBodySetMoment, 1);
 	rb_define_method(c_cpBody, "pos=", rb_cpBodySetPos, 1);
@@ -246,16 +246,16 @@ Init_cpBody(void)
 	rb_define_method(c_cpBody, "angle=", rb_cpBodySetAngle, 1);
 	rb_define_method(c_cpBody, "ang_vel=", rb_cpBodySetAVel, 1);
 	rb_define_method(c_cpBody, "torque=", rb_cpBodySetTorque, 1);
-	
+
 	rb_define_method(c_cpBody, "local2world", rb_cpBodyLocal2World, 1);
 	rb_define_method(c_cpBody, "world2local", rb_cpBodyWorld2Local, 1);
 
 	rb_define_method(c_cpBody, "reset_forces", rb_cpBodyResetForces, 0);
 	rb_define_method(c_cpBody, "apply_force", rb_cpBodyApplyForce, 2);
 	rb_define_method(c_cpBody, "apply_impulse", rb_cpBodyApplyImpulse, 2);
-	
+
 	rb_define_method(c_cpBody, "update_velocity", rb_cpBodyUpdateVelocity, 3);
 	rb_define_method(c_cpBody, "update_position", rb_cpBodyUpdatePosition, 1);
-	
+
 	// TODO integration functions?
 }

@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 // Forward declarations required for defining other structs.
 struct cpShape;
 struct cpShapeClass;
@@ -40,35 +40,35 @@ typedef enum cpShapeType{
 // Shape class. Holds function pointers and type data.
 typedef struct cpShapeClass {
 	cpShapeType type;
-	
+
 	// Called by cpShapeCacheBB().
 	cpBB (*cacheData)(struct cpShape *shape, cpVect p, cpVect rot);
 	// Called to by cpShapeDestroy().
 	void (*destroy)(struct cpShape *shape);
-	
+
 	// called by cpShapePointQuery().
 	int (*pointQuery)(struct cpShape *shape, cpVect p);
-	
+
 	// called by cpShapeSegmentQuery()
 	 void (*segmentQuery)(struct cpShape *shape, cpVect a, cpVect b, cpSegmentQueryInfo *info);
 } cpShapeClass;
 
 // Basic shape struct that the others inherit from.
 typedef struct cpShape{
-	// The "class" of a shape as defined above 
+	// The "class" of a shape as defined above
 	const cpShapeClass *klass;
-	
+
 	// cpBody that the shape is attached to.
 	cpBody *body;
 
 	// Cached BBox for the shape.
 	cpBB bb;
-	
+
 	// Sensors invoke callbacks, but do not generate collisions
 	int sensor;
-	
+
 	// *** Surface properties.
-	
+
 	// Coefficient of restitution. (elasticity)
 	cpFloat e;
 	// Coefficient of friction.
@@ -80,16 +80,16 @@ typedef struct cpShape{
 
 	// User defined data pointer for the shape.
 	cpDataPointer data;
-	
+
 	// User defined collision type for the shape.
 	cpCollisionType collision_type;
 	// User defined collision group for the shape.
 	cpGroup group;
 	// User defined layer bitmask for the shape.
 	cpLayers layers;
-	
+
 	// *** Internally Used Fields
-	
+
 	// Unique id used as the hash value.
 	cpHashValue hashid;
 } cpShape;
@@ -112,12 +112,12 @@ int cpShapePointQuery(cpShape *shape, cpVect p);
 // Circle shape structure.
 typedef struct cpCircleShape{
 	cpShape shape;
-	
+
 	// Center in body space coordinates
 	cpVect c;
 	// Radius.
 	cpFloat r;
-	
+
 	// Transformed center. (world space coordinates)
 	cpVect tc;
 } cpCircleShape;
@@ -133,7 +133,7 @@ CP_DeclareShapeGetter(cpCircleShape, cpFloat, Radius);
 // Segment shape structure.
 typedef struct cpSegmentShape{
 	cpShape shape;
-	
+
 	// Endpoints and normal of the segment. (body space coordinates)
 	cpVect a, b, n;
 	// Radius of the segment. (Thickness)

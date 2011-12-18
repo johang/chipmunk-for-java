@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,28 +31,28 @@ preStep(cpRatchetJoint *joint, cpFloat dt, cpFloat dt_inv)
 {
 	cpBody *a = joint->constraint.a;
 	cpBody *b = joint->constraint.b;
-	
+
 	cpFloat angle = joint->angle;
 	cpFloat phase = joint->phase;
 	cpFloat ratchet = joint->ratchet;
-	
+
 	cpFloat delta = b->a - a->a;
 	cpFloat diff = angle - delta;
 	cpFloat pdist = 0.0f;
-	
+
 	if(diff*ratchet > 0.0f){
 		pdist = diff;
 	} else {
 		joint->angle = cpffloor((delta - phase)/ratchet)*ratchet + phase;
 	}
-	
+
 	// calculate moment of inertia coefficient.
 	joint->iSum = 1.0f/(a->i_inv + b->i_inv);
-	
+
 	// calculate bias velocity
 	cpFloat maxBias = joint->constraint.maxBias;
 	joint->bias = cpfclamp(-joint->constraint.biasCoef*dt_inv*pdist, -maxBias, maxBias);
-	
+
 	// compute max impulse
 	joint->jMax = J_MAX(joint, dt);
 
@@ -72,17 +72,17 @@ applyImpulse(cpRatchetJoint *joint)
 
 	cpBody *a = joint->constraint.a;
 	cpBody *b = joint->constraint.b;
-	
+
 	// compute relative rotational velocity
 	cpFloat wr = b->w - a->w;
 	cpFloat ratchet = joint->ratchet;
-	
-	// compute normal impulse	
+
+	// compute normal impulse
 	cpFloat j = -(joint->bias + wr)*joint->iSum;
 	cpFloat jOld = joint->jAcc;
 	joint->jAcc = cpfclamp((jOld + j)*ratchet, 0.0f, joint->jMax*cpfabs(ratchet))/ratchet;
 	j = joint->jAcc - jOld;
-	
+
 	// apply impulse
 	a->w -= j*a->i_inv;
 	b->w += j*b->i_inv;
@@ -111,13 +111,13 @@ cpRatchetJoint *
 cpRatchetJointInit(cpRatchetJoint *joint, cpBody *a, cpBody *b, cpFloat phase, cpFloat ratchet)
 {
 	cpConstraintInit((cpConstraint *)joint, &klass, a, b);
-	
+
 	joint->angle = 0.0f;
 	joint->phase = phase;
 	joint->ratchet = ratchet;
-	
+
 	joint->angle = b->a - a->a;
-	
+
 	return joint;
 }
 

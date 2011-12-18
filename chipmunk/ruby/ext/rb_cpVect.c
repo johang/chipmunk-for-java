@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 #include <stdlib.h>
 #include "chipmunk.h"
 
@@ -46,7 +46,7 @@ rb_cpVectInitialize(VALUE self, VALUE x, VALUE y)
 	cpVect *v = VGET(self);
 	v->x = NUM2DBL(x);
 	v->y = NUM2DBL(y);
-	
+
 	return self;
 }
 
@@ -81,9 +81,9 @@ rb_cpVectToString(VALUE self)
 {
 	char str[256];
 	cpVect *v = VGET(self);
-	
+
 	sprintf(str, "(% .3f, % .3f)", v->x, v->y);
-	
+
 	return rb_str_new2(str);
 }
 
@@ -99,7 +99,7 @@ rb_cpVectToAngle(VALUE self)
 {
 	return rb_float_new(cpvtoangle(*VGET(self)));
 }
-	
+
 
 static VALUE
 rb_cpVectNegate(VALUE self)
@@ -217,19 +217,19 @@ Init_cpVect(void)
 {
 	c_cpVect = rb_define_class_under(m_Chipmunk, "Vec2", rb_cObject);
 	rb_define_singleton_method(c_cpVect, "for_angle", rb_cpVectForAngle, 1);
-	
+
 	rb_define_alloc_func(c_cpVect, rb_cpVectAlloc);
 	rb_define_method(c_cpVect, "initialize", rb_cpVectInitialize, 2);
-	
+
 	rb_define_method(c_cpVect, "x", rb_cpVectGetX, 0);
 	rb_define_method(c_cpVect, "y", rb_cpVectGetY, 0);
 	rb_define_method(c_cpVect, "x=", rb_cpVectSetX, 1);
 	rb_define_method(c_cpVect, "y=", rb_cpVectSetY, 1);
-	
+
 	rb_define_method(c_cpVect, "to_s", rb_cpVectToString, 0);
 	rb_define_method(c_cpVect, "to_a", rb_cpVectToArray, 0);
 	rb_define_method(c_cpVect, "to_angle", rb_cpVectToAngle, 0);
-	
+
 	rb_define_method(c_cpVect, "-@", rb_cpVectNegate, 0);
 	rb_define_method(c_cpVect, "+", rb_cpVectAdd, 1);
 	rb_define_method(c_cpVect, "-", rb_cpVectSub, 1);
@@ -246,6 +246,6 @@ Init_cpVect(void)
 	rb_define_method(c_cpVect, "rotate", rb_cpVectRotate, 1);
 	rb_define_method(c_cpVect, "unrotate", rb_cpVectUnRotate, 1);
 	rb_define_method(c_cpVect, "near?", rb_cpVectNear, 2);
-		
+
 	rb_define_global_function("vec2", rb_vec2, 2);
 }
