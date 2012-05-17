@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,7 +30,7 @@ typedef struct cpPolyShapeAxis{
 // Convex polygon shape structure.
 typedef struct cpPolyShape{
 	cpShape shape;
-	
+
 	// Vertex and axis lists.
 	int numVerts;
 	cpVect *verts;
@@ -60,11 +60,11 @@ cpPolyShapeValueOnAxis(const cpPolyShape *poly, const cpVect n, const cpFloat d)
 {
 	cpVect *verts = poly->tVerts;
 	cpFloat min = cpvdot(n, verts[0]);
-	
+
 	int i;
 	for(i=1; i<poly->numVerts; i++)
 		min = cpfmin(min, cpvdot(n, verts[i]));
-	
+
 	return min - d;
 }
 
@@ -73,13 +73,13 @@ static inline int
 cpPolyShapeContainsVert(cpPolyShape *poly, cpVect v)
 {
 	cpPolyShapeAxis *axes = poly->tAxes;
-	
+
 	int i;
 	for(i=0; i<poly->numVerts; i++){
 		cpFloat dist = cpvdot(axes[i].n, v) - axes[i].d;
 		if(dist > 0.0f) return 0;
 	}
-	
+
 	return 1;
 }
 
@@ -88,13 +88,13 @@ static inline int
 cpPolyShapeContainsVertPartial(cpPolyShape *poly, cpVect v, cpVect n)
 {
 	cpPolyShapeAxis *axes = poly->tAxes;
-	
+
 	int i;
 	for(i=0; i<poly->numVerts; i++){
 		if(cpvdot(axes[i].n, n) < 0.0f) continue;
 		cpFloat dist = cpvdot(axes[i].n, v) - axes[i].d;
 		if(dist > 0.0f) return 0;
 	}
-	
+
 	return 1;
 }

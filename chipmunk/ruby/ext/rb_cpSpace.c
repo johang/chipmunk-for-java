@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 #include <stdlib.h>
 #include "chipmunk.h"
 
@@ -46,7 +46,7 @@ rb_cpSpaceInitialize(VALUE self)
 {
 	cpSpace *space = SPACE(self);
 	cpSpaceInit(space);
-	
+
 	// These might as well be in one shared hash.
 	rb_iv_set(self, "static_shapes", rb_ary_new());
 	rb_iv_set(self, "active_shapes", rb_ary_new());
@@ -173,7 +173,7 @@ rb_cpSpaceAddCollisionHandler(int argc, VALUE *argv, VALUE self)
 	VALUE id_a = rb_obj_id(a);
 	VALUE id_b = rb_obj_id(b);
 	VALUE blocks = rb_iv_get(self, "blocks");
-	
+
 	if(RTEST(obj) && RTEST(block)){
 		rb_raise(rb_eArgError, "Cannot specify both a handler object and a block.");
 	} else if(RTEST(block)){
@@ -185,7 +185,7 @@ rb_cpSpaceAddCollisionHandler(int argc, VALUE *argv, VALUE self)
 			NULL,
 			(void *)block
 		);
-		
+
 		rb_hash_aset(blocks, rb_ary_new3(2, id_a, id_b), block);
 	} else if(RTEST(obj)) {
 		rb_notimplement(); // need to make it pass arbiters and crap
@@ -197,7 +197,7 @@ rb_cpSpaceAddCollisionHandler(int argc, VALUE *argv, VALUE self)
 			(respondsTo(obj, id_separate)   ? separateCallback  : NULL),
 			(void *)obj
 		);
-		
+
 		rb_hash_aset(blocks, rb_ary_new3(2, id_a, id_b), obj);
 	} else {
 		cpSpaceAddCollisionHandler(
@@ -205,7 +205,7 @@ rb_cpSpaceAddCollisionHandler(int argc, VALUE *argv, VALUE self)
 			NULL, doNothingCallback, NULL, NULL, NULL
 		);
 	}
-		
+
 	return Qnil;
 }
 
@@ -215,10 +215,10 @@ rb_cpSpaceRemoveCollisionHandler(VALUE self, VALUE a, VALUE b)
 	VALUE id_a = rb_obj_id(a);
 	VALUE id_b = rb_obj_id(b);
 	cpSpaceRemoveCollisionHandler(SPACE(self), NUM2UINT(id_a), NUM2UINT(id_b));
-	
+
 	VALUE blocks = rb_iv_get(self, "blocks");
 	rb_hash_delete(blocks, rb_ary_new3(2, id_a, id_b));
-	
+
 	return Qnil;
 }
 
@@ -227,7 +227,7 @@ rb_cpSpaceSetDefaultCollisionHandler(int argc, VALUE *argv, VALUE self)
 {
 	VALUE obj, block;
 	rb_scan_args(argc, argv, "01&", &obj, &block);
-	
+
 	if(RTEST(obj) && RTEST(block)){
 		rb_raise(rb_eArgError, "Cannot specify both a handler object and a block.");
 	} else if(RTEST(block)){
@@ -240,7 +240,7 @@ rb_cpSpaceSetDefaultCollisionHandler(int argc, VALUE *argv, VALUE self)
 			NULL,
 			(void *)block
 		);
-		
+
 		rb_hash_aset(rb_iv_get(self, "blocks"), ID2SYM(rb_intern("default")), block);
 	} else if(RTEST(obj)) {
 		cpSpaceSetDefaultCollisionHandler(
@@ -251,14 +251,14 @@ rb_cpSpaceSetDefaultCollisionHandler(int argc, VALUE *argv, VALUE self)
 			(respondsTo(obj, id_separate)   ? separateCallback  : NULL),
 			(void *)obj
 		);
-		
+
 		rb_hash_aset(rb_iv_get(self, "blocks"), ID2SYM(rb_intern("default")), obj);
 	} else {
 		cpSpaceSetDefaultCollisionHandler(
 			SPACE(self), NULL, doNothingCallback, NULL, NULL, NULL
 		);
 	}
-	
+
 	return Qnil;
 }
 
@@ -354,14 +354,14 @@ rb_cpSpacePointQuery(int argc, VALUE *argv, VALUE self)
 {
 	VALUE point, layers, group, block;
 	rb_scan_args(argc, argv, "12&", &point, &layers, &group, &block);
-	
+
 	cpSpacePointQuery(
 		SPACE(self), *VGET(point),
 		(NIL_P(layers) ? ~0 : NUM2UINT(layers)),
 		(NIL_P(group) ? 0 : NUM2UINT(rb_obj_id(group))),
 		(cpSpacePointQueryFunc)pointQueryCallback, (void *)block
 	);
-	
+
 	return Qnil;
 }
 
@@ -370,13 +370,13 @@ rb_cpSpacePointQueryFirst(int argc, VALUE *argv, VALUE self)
 {
 	VALUE point, layers, group;
 	rb_scan_args(argc, argv, "12", &point, &layers, &group);
-	
+
 	cpShape *shape = cpSpacePointQueryFirst(
 		SPACE(self), *VGET(point),
 		(NIL_P(layers) ? ~0 : NUM2UINT(layers)),
 		(NIL_P(group) ? 0 : NUM2UINT(rb_obj_id(group)))
 	);
-	
+
 	return (shape ? (VALUE)shape->data : Qnil);
 }
 
@@ -391,14 +391,14 @@ rb_cpSpaceSegmentQuery(int argc, VALUE *argv, VALUE self)
 {
 	VALUE a, b, layers, group, block;
 	rb_scan_args(argc, argv, "22&", &a, &b, &layers, &group, &block);
-	
+
 	cpSpaceSegmentQuery(
 		SPACE(self), *VGET(a), *VGET(b),
 		(NIL_P(layers) ? ~0 : NUM2UINT(layers)),
 		(NIL_P(group) ? 0 : NUM2UINT(rb_obj_id(group))),
 		(cpSpaceSegmentQueryFunc)segmentQueryCallback, (void *)block
 	);
-	
+
 	return Qnil;
 }
 
@@ -407,16 +407,16 @@ rb_cpSpaceSegmentQueryFirst(int argc, VALUE *argv, VALUE self)
 {
 	VALUE a, b, layers, group, block;
 	rb_scan_args(argc, argv, "22&", &a, &b, &layers, &group, &block);
-	
+
 	cpSegmentQueryInfo info = {NULL, 1.0f, cpvzero};
-	
+
 	cpSpaceSegmentQueryFirst(
 		SPACE(self), *VGET(a), *VGET(b),
 		(NIL_P(layers) ? ~0 : NUM2UINT(layers)),
 		(NIL_P(group) ? 0 : NUM2UINT(rb_obj_id(group))),
 		&info
 	);
-	
+
 	if(info.shape){
 		return rb_ary_new3(3, (VALUE)info.shape->data, rb_float_new(info.t), VNEW(info.n));
 	} else {
@@ -441,46 +441,46 @@ Init_cpSpace(void)
 	id_pre_solve = rb_intern("pre_solve");
 	id_post_solve = rb_intern("post_solve");
 	id_separate = rb_intern("separate");
-	
+
 	c_cpSpace = rb_define_class_under(m_Chipmunk, "Space", rb_cObject);
 	rb_define_alloc_func(c_cpSpace, rb_cpSpaceAlloc);
 	rb_define_method(c_cpSpace, "initialize", rb_cpSpaceInitialize, 0);
-	
+
 	rb_define_method(c_cpSpace, "iterations", rb_cpSpaceGetIterations, 0);
 	rb_define_method(c_cpSpace, "iterations=", rb_cpSpaceSetIterations, 1);
-	
+
 	rb_define_method(c_cpSpace, "elastic_iterations", rb_cpSpaceGetElasticIterations, 0);
 	rb_define_method(c_cpSpace, "elastic_iterations=", rb_cpSpaceSetElasticIterations, 1);
-	
+
 	rb_define_method(c_cpSpace, "damping", rb_cpSpaceGetDamping, 0);
 	rb_define_method(c_cpSpace, "damping=", rb_cpSpaceSetDamping, 1);
-	
+
 	rb_define_method(c_cpSpace, "gravity", rb_cpSpaceGetGravity, 0);
 	rb_define_method(c_cpSpace, "gravity=", rb_cpSpaceSetGravity, 1);
 
 	rb_define_method(c_cpSpace, "add_collision_func", rb_cpSpaceAddCollisionHandler, -1);
 	rb_define_method(c_cpSpace, "remove_collision_func", rb_cpSpaceRemoveCollisionHandler, 2);
 	rb_define_method(c_cpSpace, "set_default_collision_func", rb_cpSpaceSetDefaultCollisionHandler, -1);
-	
+
 	rb_define_method(c_cpSpace, "add_shape", rb_cpSpaceAddShape, 1);
 	rb_define_method(c_cpSpace, "add_static_shape", rb_cpSpaceAddStaticShape, 1);
 	rb_define_method(c_cpSpace, "add_body", rb_cpSpaceAddBody, 1);
 	rb_define_method(c_cpSpace, "add_constraint", rb_cpSpaceAddConstraint, 1);
-	
+
 	rb_define_method(c_cpSpace, "remove_shape", rb_cpSpaceRemoveShape, 1);
 	rb_define_method(c_cpSpace, "remove_static_shape", rb_cpSpaceRemoveStaticShape, 1);
 	rb_define_method(c_cpSpace, "remove_body", rb_cpSpaceRemoveBody, 1);
 	rb_define_method(c_cpSpace, "remove_constraint", rb_cpSpaceRemoveConstraint, 1);
-	
+
 	rb_define_method(c_cpSpace, "resize_static_hash", rb_cpSpaceResizeStaticHash, 2);
 	rb_define_method(c_cpSpace, "resize_active_hash", rb_cpSpaceResizeActiveHash, 2);
 	rb_define_method(c_cpSpace, "rehash_static", rb_cpSpaceRehashStatic, 0);
-	
+
 	rb_define_method(c_cpSpace, "point_query", rb_cpSpacePointQuery, -1);
 	rb_define_method(c_cpSpace, "point_query_first", rb_cpSpacePointQueryFirst, -1);
-	
+
 	rb_define_method(c_cpSpace, "segment_query", rb_cpSpaceSegmentQuery, -1);
 	rb_define_method(c_cpSpace, "segment_query_first", rb_cpSpaceSegmentQueryFirst, -1);
-	
+
 	rb_define_method(c_cpSpace, "step", rb_cpSpaceStep, 1);
 }

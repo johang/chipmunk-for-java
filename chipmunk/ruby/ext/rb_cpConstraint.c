@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
-* 
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in
 * all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -76,7 +76,7 @@ rb_cpPinJoint_init(VALUE self, VALUE a, VALUE b, VALUE anchr1, VALUE anchr2)
 	cpPinJointInit(joint, BODY(a), BODY(b), *VGET(anchr1), *VGET(anchr2));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -94,7 +94,7 @@ rb_cpDampedRotarySpring_init(VALUE self, VALUE a, VALUE b, VALUE restAngle, VALU
 	cpDampedRotarySpringInit(spring, BODY(a), BODY(b), NUM2DBL(restAngle), NUM2DBL(stiffness), NUM2DBL(damping));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -112,7 +112,7 @@ rb_cpDampedSpring_init(VALUE self, VALUE a, VALUE b, VALUE anchr1, VALUE anchr2,
 	cpDampedSpringInit(spring, BODY(a), BODY(b), *VGET(anchr1), *VGET(anchr2), NUM2DBL(restLength), NUM2DBL(stiffness), NUM2DBL(damping));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -132,7 +132,7 @@ rb_cpGearJoint_init(VALUE self, VALUE a, VALUE b, VALUE phase, VALUE ratio)
 	cpGearJointInit(joint, BODY(a), BODY(b), NUM2DBL(phase), NUM2DBL(ratio));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -149,7 +149,7 @@ rb_cpPivotJoint_init(VALUE self, VALUE a, VALUE b, VALUE anchr1, VALUE anchr2)
 	cpPivotJointInit(joint, BODY(a), BODY(b), *VGET(anchr1), *VGET(anchr2));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -166,7 +166,7 @@ rb_cpRotaryLimitJoint_init(VALUE self, VALUE a, VALUE b, VALUE min, VALUE max)
 	cpRotaryLimitJointInit(joint, BODY(a), BODY(b), NUM2DBL(min), NUM2DBL(max));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -183,7 +183,7 @@ rb_cpSimpleMotor_init(VALUE self, VALUE a, VALUE b, VALUE rate)
 	cpSimpleMotorInit(motor, BODY(a), BODY(b), NUM2DBL(rate));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -199,7 +199,7 @@ rb_cpSlideJoint_init(VALUE self, VALUE a, VALUE b, VALUE anchr1, VALUE anchr2, V
 	cpSlideJointInit(joint, BODY(a), BODY(b), *VGET(anchr1), *VGET(anchr2), NUM2DBL(min), NUM2DBL(max));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -218,7 +218,7 @@ rb_cpGrooveJoint_init(VALUE self, VALUE a, VALUE b, VALUE grv_a, VALUE grv_b, VA
 	cpGrooveJointInit(joint, BODY(a), BODY(b), *VGET(grv_a), *VGET(grv_b), *VGET(anchr2));
 	rb_iv_set(self, "@body_a", a);
 	rb_iv_set(self, "@body_b", b);
-	
+
 	return self;
 }
 
@@ -238,7 +238,7 @@ make_class(char *name, void *alloc_func, void *init_func, int init_params)
 	rb_include_module(klass, m_cpConstraint);
 	rb_define_alloc_func(klass, alloc_func);
 	rb_define_method(klass, "initialize", init_func, init_params);
-	
+
 	return klass;
 }
 
@@ -254,48 +254,48 @@ Init_cpConstraint(void)
 	rb_define_method(m_cpConstraint, "bias_coef=", rb_cpConstraint_set_biasCoef, 1);
 	rb_define_method(m_cpConstraint, "max_bias", rb_cpConstraint_get_maxBias, 0);
 	rb_define_method(m_cpConstraint, "max_bias=", rb_cpConstraint_set_maxBias, 1);
-	
+
 	VALUE c_cpPinJoint = make_class("PinJoint", rb_cpPinJoint_alloc, rb_cpPinJoint_init, 4);
 	ACCESSOR_METHODS(cpPinJoint, Anchr1, anchr1)
 	ACCESSOR_METHODS(cpPinJoint, Anchr2, anchr2)
 	ACCESSOR_METHODS(cpPinJoint, Dist, dist)
-	
+
 	VALUE c_cpDampedRotarySpring = make_class("DampedRotarySpring", rb_cpDampedRotarySpring_alloc, rb_cpDampedRotarySpring_init, 5);
 	ACCESSOR_METHODS(cpDampedRotarySpring, RestAngle, rest_angle)
 	ACCESSOR_METHODS(cpDampedRotarySpring, Stiffness, stiffness)
 	ACCESSOR_METHODS(cpDampedRotarySpring, Damping, damping)
-	
+
 	VALUE c_cpDampedSpring = make_class("DampedSpring", rb_cpDampedSpring_alloc, rb_cpDampedSpring_init, 7);
 	ACCESSOR_METHODS(cpDampedSpring, Anchr1, anchr1)
 	ACCESSOR_METHODS(cpDampedSpring, Anchr2, anchr2)
 	ACCESSOR_METHODS(cpDampedSpring, RestLength, rest_length)
 	ACCESSOR_METHODS(cpDampedSpring, Stiffness, stiffness)
 	ACCESSOR_METHODS(cpDampedSpring, Damping, damping)
-	
+
 	VALUE c_cpGearJoint = make_class("GearJoint", rb_cpGearJoint_alloc, rb_cpGearJoint_init, 4);
 	ACCESSOR_METHODS(cpGearJoint, Phase, phase)
 	ACCESSOR_METHODS(cpGearJoint, Ratio, ratio)
-	
+
 	VALUE c_cpPivotJoint = make_class("PivotJoint", rb_cpPivotJoint_alloc, rb_cpPivotJoint_init, 4);
 	ACCESSOR_METHODS(cpPivotJoint, Anchr1, anchr1)
 	ACCESSOR_METHODS(cpPivotJoint, Anchr2, anchr2)
-	
+
 	VALUE c_cpRotaryLimitJoint = make_class("RotaryLimitJoint", rb_cpRotaryLimitJoint_alloc, rb_cpRotaryLimitJoint_init, 4);
 	ACCESSOR_METHODS(cpRotaryLimitJoint, Min, min)
 	ACCESSOR_METHODS(cpRotaryLimitJoint, Max, max)
-	
+
 	VALUE c_cpSimpleMotor = make_class("SimpleMotor", rb_cpSimpleMotor_alloc, rb_cpSimpleMotor_init, 3);
 	ACCESSOR_METHODS(cpSimpleMotor, Rate, rate);
-	
+
 	VALUE c_cpSlideJoint = make_class("SlideJoint", rb_cpSlideJoint_alloc, rb_cpSlideJoint_init, 6);
 	ACCESSOR_METHODS(cpSlideJoint, Anchr1, anchr1)
 	ACCESSOR_METHODS(cpSlideJoint, Anchr2, anchr2)
 	ACCESSOR_METHODS(cpSlideJoint, Min, min)
 	ACCESSOR_METHODS(cpSlideJoint, Max, max)
-	
+
 	VALUE c_cpGrooveJoint = make_class("GrooveJoint", rb_cpGrooveJoint_alloc, rb_cpGrooveJoint_init, 5);
 	ACCESSOR_METHODS(cpGrooveJoint, Anchr2, anchr2)
 // TODO groove joint accessors
-	
+
 	// TODO breakable joint
 }

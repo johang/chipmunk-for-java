@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
  struct cpArbiter;
  struct cpSpace;
  struct cpCollisionHandler;
@@ -34,7 +34,7 @@ typedef struct cpContact {
 	cpVect p, n;
 	// Penetration distance.
 	cpFloat dist;
-	
+
 	// Calculated by cpArbiterPreStep().
 	cpVect r1, r2;
 	cpFloat nMass, tMass, bounce;
@@ -42,7 +42,7 @@ typedef struct cpContact {
 	// Persistant contact information.
 	cpFloat jnAcc, jtAcc, jBias;
 	cpFloat bias;
-	
+
 	// Hash value used to (mostly) uniquely identify a contact.
 	cpHashValue hash;
 } cpContact;
@@ -65,22 +65,22 @@ typedef struct cpArbiter {
 	// Information on the contact points between the objects.
 	int numContacts;
 	cpContact *contacts;
-	
+
 	// The two shapes involved in the collision.
 	cpShape *a, *b;
-	
+
 	// Calculated before calling the pre-solve collision handler
 	// Override them with custom values if you want specialized behavior
 	cpFloat e;
 	cpFloat u;
 	 // Used for surface_v calculations, implementation may change
 	cpVect surface_vr;
-	
+
 	// Time stamp of the arbiter. (from cpSpace)
 	int stamp;
-	
+
 	struct cpCollisionHandler *handler;
-	
+
 	// Are the shapes swapped in relation to the collision handler?
 	char swappedColl;
 	char state;

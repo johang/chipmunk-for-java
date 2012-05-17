@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 #include "chipmunk_types.h"
-	
+
 static inline cpFloat
 cpfmax(cpFloat a, cpFloat b)
 {
@@ -74,11 +74,11 @@ cpflerpconst(cpFloat f1, cpFloat f2, cpFloat d)
 		static union MSVC_EVIL_FLOAT_HACK INFINITY_HACK = {{0x00, 0x00, 0x80, 0x7F}};
 		#define INFINITY (INFINITY_HACK.Value)
 	#endif
-	
+
 	#ifdef __GNUC__
 		#define INFINITY (__builtin_inf())
 	#endif
-	
+
 	#ifndef INFINITY
 		#define INFINITY (1e1000)
 	#endif
@@ -101,7 +101,7 @@ cpflerpconst(cpFloat f1, cpFloat f2, cpFloat d)
 
 #include "cpArbiter.h"
 #include "cpCollision.h"
-	
+
 #include "constraints/cpConstraint.h"
 
 #include "cpSpace.h"

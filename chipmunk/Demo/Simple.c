@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -39,11 +39,11 @@ init(void)
 	// Adding bodies to the space simulates them. (fall under the influence of gravity, etc)
 	// We want the static body to stay right where it is at all times.
 	staticBody = cpBodyNew(INFINITY, INFINITY);
-	
+
 	// Create a space, a space is a simulation world. It simulates the motions of rigid bodies,
 	// handles collisions between them, and simulates the joints between them.
 	space = cpSpaceNew();
-	
+
 	// Lets set some parameters of the space:
 	// More iterations make the simulation more accurate but slower
 	space->iterations = 10;
@@ -53,7 +53,7 @@ init(void)
 	cpSpaceResizeActiveHash(space, 30.0f, 1000);
 	// Give it some gravity
 	space->gravity = cpv(0, -100);
-	
+
 	// Create A ground segment along the bottom of the screen
 	cpShape *ground = cpSegmentShapeNew(staticBody, cpv(-320,-240), cpv(320,-240), 0.0f);
 	// Set some parameters of the shape.
@@ -65,7 +65,7 @@ init(void)
 	// calculate collision information for it once when it is added.
 	// Do not change the postion of a static shape after adding it.
 	cpSpaceAddStaticShape(space, ground);
-	
+
 	// Add a moving circle object.
 	cpFloat radius = 15.0f;
 	cpFloat mass = 10.0f;
@@ -76,15 +76,15 @@ init(void)
 	ballBody->p = cpv(0, -240 + radius+5);
 	// Add the body to the space so it will be simulated and move around.
 	cpSpaceAddBody(space, ballBody);
-	
-	
+
+
 	// Add a circle shape for the ball.
 	// Shapes are always defined relative to the center of gravity of the body they are attached to.
 	// When the body moves or rotates, the shape will move with it.
 	// Additionally, all of the cpSpaceAdd*() functions return the thing they added so you can create and add in one go.
 	cpShape *ballShape = cpSpaceAddShape(space, cpCircleShapeNew(ballBody, radius, cpvzero));
 	ballShape->e = 0.0f; ballShape->u = 0.9f;
-	
+
 	return space;
 }
 

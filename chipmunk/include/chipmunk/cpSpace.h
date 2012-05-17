@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -44,43 +44,43 @@ typedef struct cpCollisionHandler {
 
 typedef struct cpSpace{
 	// *** User definable fields
-	
+
 	// Number of iterations to use in the impulse solver to solve contacts.
 	int iterations;
-	
+
 	// Number of iterations to use in the impulse solver to solve elastic collisions.
 	int elasticIterations;
-	
+
 	// Default gravity to supply when integrating rigid body motions.
 	cpVect gravity;
-	
+
 	// Default damping to supply when integrating rigid body motions.
 	cpFloat damping;
-	
+
 	// *** Internally Used Fields
-	
+
 	// Time stamp. Is incremented on every call to cpSpaceStep().
 	int stamp;
 
 	// The static and active shape spatial hashes.
 	cpSpaceHash *staticShapes;
 	cpSpaceHash *activeShapes;
-	
+
 	// List of bodies in the system.
 	cpArray *bodies;
 	// List of active arbiters for the impulse solver.
 	cpArray *arbiters;
 	// Persistant contact set.
 	cpHashSet *contactSet;
-	
+
 	// List of constraints in the system.
 	cpArray *constraints;
-	
+
 	// Set of collisionpair functions.
 	cpHashSet *collFuncSet;
 	// Default collision handler.
 	cpCollisionHandler defaultHandler;
-	
+
 	cpHashSet *postStepCallbacks;
 } cpSpace;
 

@@ -20,7 +20,7 @@ src = [
 ]
 
 static_lib = env.StaticLibrary(
-	'../chipmunk', 
+	'../chipmunk',
 	src,
 )
 

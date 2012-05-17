@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -37,7 +37,7 @@ contactSetEql(cpShape **shapes, cpArbiter *arb)
 {
 	cpShape *a = shapes[0];
 	cpShape *b = shapes[1];
-	
+
 	return ((a == arb->a && b == arb->b) || (b == arb->a && a == arb->b));
 }
 
@@ -63,7 +63,7 @@ collFuncSetTrans(cpCollisionHandler *handler, void *unused)
 {
 	cpCollisionHandler *copy = (cpCollisionHandler *)cpmalloc(sizeof(cpCollisionHandler));
 	(*copy) = (*handler);
-	
+
 	return copy;
 }
 
@@ -85,7 +85,7 @@ postStepFuncSetTrans(postStepCallback *callback, void *ignored)
 {
 	postStepCallback *value = (postStepCallback *)cpmalloc(sizeof(postStepCallback));
 	(*value) = (*callback);
-	
+
 	return value;
 }
 
@@ -126,27 +126,27 @@ cpSpaceInit(cpSpace *space)
 	space->iterations = DEFAULT_ITERATIONS;
 	space->elasticIterations = DEFAULT_ELASTIC_ITERATIONS;
 //	space->sleepTicks = 300;
-	
+
 	space->gravity = cpvzero;
 	space->damping = 1.0f;
-	
+
 	space->stamp = 0;
 
 	space->staticShapes = cpSpaceHashNew(DEFAULT_DIM_SIZE, DEFAULT_COUNT, (cpSpaceHashBBFunc)shapeBBFunc);
 	space->activeShapes = cpSpaceHashNew(DEFAULT_DIM_SIZE, DEFAULT_COUNT, (cpSpaceHashBBFunc)shapeBBFunc);
-	
+
 	space->bodies = cpArrayNew(0);
 	space->arbiters = cpArrayNew(0);
 	space->contactSet = cpHashSetNew(0, (cpHashSetEqlFunc)contactSetEql, (cpHashSetTransFunc)contactSetTrans);
-	
+
 	space->constraints = cpArrayNew(0);
-	
+
 	space->defaultHandler = defaultHandler;
 	space->collFuncSet = cpHashSetNew(0, (cpHashSetEqlFunc)collFuncSetEql, (cpHashSetTransFunc)collFuncSetTrans);
 	space->collFuncSet->default_value = &space->defaultHandler;
-	
+
 	space->postStepCallbacks = cpHashSetNew(0, (cpHashSetEqlFunc)postStepFuncSetEql, (cpHashSetTransFunc)postStepFuncSetTrans);
-	
+
 	return space;
 }
 
@@ -161,21 +161,21 @@ cpSpaceDestroy(cpSpace *space)
 {
 	cpSpaceHashFree(space->staticShapes);
 	cpSpaceHashFree(space->activeShapes);
-	
+
 	cpArrayFree(space->bodies);
-	
+
 	cpArrayFree(space->constraints);
-	
+
 	if(space->contactSet)
 		cpHashSetEach(space->contactSet, (cpHashSetIterFunc)&arbiterFreeWrap, NULL);
-	
+
 	cpHashSetFree(space->contactSet);
 	cpArrayFree(space->arbiters);
-	
+
 	if(space->postStepCallbacks)
 		cpHashSetEach(space->postStepCallbacks, &freeWrap, NULL);
 	cpHashSetFree(space->postStepCallbacks);
-	
+
 	if(space->collFuncSet)
 		cpHashSetEach(space->collFuncSet, &freeWrap, NULL);
 	cpHashSetFree(space->collFuncSet);
@@ -213,7 +213,7 @@ cpSpaceAddCollisionHandler(
 ){
 	// Remove any old function so the new one will get added.
 	cpSpaceRemoveCollisionHandler(space, a, b);
-	
+
 	cpCollisionHandler handler = {
 		a, b,
 		begin ? begin : alwaysCollide,
@@ -222,7 +222,7 @@ cpSpaceAddCollisionHandler(
 		separate ? separate : nothing,
 		data
 	};
-	
+
 	cpHashSetInsert(space->collFuncSet, CP_HASH_PAIR(a, b), &handler, NULL);
 }
 
@@ -251,7 +251,7 @@ cpSpaceSetDefaultCollisionHandler(
 		separate ? separate : nothing,
 		data
 	};
-	
+
 	space->defaultHandler = handler;
 }
 
@@ -263,7 +263,7 @@ cpSpaceAddShape(cpSpace *space, cpShape *shape)
 	assert(shape->body);
 	assert(!cpHashSetFind(space->activeShapes->handleSet, shape->hashid, shape));
 	cpSpaceHashInsert(space->activeShapes, shape, shape->hashid, shape->bb);
-	
+
 	return shape;
 }
 
@@ -275,7 +275,7 @@ cpSpaceAddStaticShape(cpSpace *space, cpShape *shape)
 
 	cpShapeCacheBB(shape);
 	cpSpaceHashInsert(space->staticShapes, shape, shape->hashid, shape->bb);
-	
+
 	return shape;
 }
 
@@ -283,9 +283,9 @@ cpBody *
 cpSpaceAddBody(cpSpace *space, cpBody *body)
 {
 	assert(!cpArrayContains(space->bodies, body));
-	
+
 	cpArrayPush(space->bodies, body);
-	
+
 	return body;
 }
 
@@ -293,9 +293,9 @@ cpConstraint *
 cpSpaceAddConstraint(cpSpace *space, cpConstraint *constraint)
 {
 	assert(!cpArrayContains(space->constraints, constraint));
-	
+
 	cpArrayPush(space->constraints, constraint);
-	
+
 	return constraint;
 }
 
@@ -303,7 +303,7 @@ void
 cpSpaceRemoveShape(cpSpace *space, cpShape *shape)
 {
 	assert(cpHashSetFind(space->activeShapes->handleSet, shape->hashid, shape));
-	
+
 	cpSpaceHashRemove(space->activeShapes, shape, shape->hashid);
 }
 
@@ -311,7 +311,7 @@ void
 cpSpaceRemoveStaticShape(cpSpace *space, cpShape *shape)
 {
 	assert(cpHashSetFind(space->staticShapes->handleSet, shape->hashid, shape));
-	
+
 	cpSpaceHashRemove(space->staticShapes, shape, shape->hashid);
 }
 
@@ -319,7 +319,7 @@ void
 cpSpaceRemoveBody(cpSpace *space, cpBody *body)
 {
 	assert(cpArrayContains(space->bodies, body));
-	
+
 	cpArrayDeleteObj(space->bodies, body);
 }
 
@@ -327,7 +327,7 @@ void
 cpSpaceRemoveConstraint(cpSpace *space, cpConstraint *constraint)
 {
 	assert(cpArrayContains(space->constraints, constraint));
-	
+
 	cpArrayDeleteObj(space->constraints, constraint);
 }
 
@@ -362,7 +362,7 @@ typedef struct pointQueryContext {
 	void *data;
 } pointQueryContext;
 
-static void 
+static void
 pointQueryHelper(cpVect *point, cpShape *shape, pointQueryContext *context)
 {
 	if(
@@ -392,7 +392,7 @@ cpSpacePointQueryFirst(cpSpace *space, cpVect point, cpLayers layers, cpGroup gr
 {
 	cpShape *shape = NULL;
 	cpSpacePointQuery(space, point, layers, group, (cpSpacePointQueryFunc)rememberLastPointQuery, &shape);
-	
+
 	return shape;
 }
 
@@ -400,7 +400,7 @@ void
 cpSpaceEachBody(cpSpace *space, cpSpaceBodyIterator func, void *data)
 {
 	cpArray *bodies = space->bodies;
-	
+
 	for(int i=0; i<bodies->num; i++)
 		func((cpBody *)bodies->arr[i], data);
 }
@@ -419,7 +419,7 @@ static cpFloat
 segQueryFunc(segQueryContext *context, cpShape *shape, void *data)
 {
 	cpSegmentQueryInfo info;
-	
+
 	if(
 		!(shape->group && context->group == shape->group) && (context->layers&shape->layers) &&
 		cpShapeSegmentQuery(shape, context->start, context->end, &info)
@@ -427,10 +427,10 @@ segQueryFunc(segQueryContext *context, cpShape *shape, void *data)
 		if(context->func){
 			context->func(shape, info.t, info.n, data);
 		}
-		
+
 		context->anyCollision = 1;
 	}
-	
+
 	return 1.0f;
 }
 
@@ -443,10 +443,10 @@ cpSpaceSegmentQuery(cpSpace *space, cpVect start, cpVect end, cpLayers layers, c
 		func,
 		0,
 	};
-	
+
 	cpSpaceHashSegmentQuery(space->staticShapes, &context, start, end, 1.0f, (cpSpaceHashSegmentQueryFunc)segQueryFunc, data);
 	cpSpaceHashSegmentQuery(space->activeShapes, &context, start, end, 1.0f, (cpSpaceHashSegmentQueryFunc)segQueryFunc, data);
-	
+
 	return context.anyCollision;
 }
 
@@ -469,10 +469,10 @@ segQueryFirst(segQueryFirstContext *context, cpShape *shape, cpSegmentQueryInfo 
 			out->t = info.t;
 			out->n = info.n;
 		}
-		
+
 		return info.t;
 	}
-	
+
 	return 1.0f;
 }
 
@@ -485,17 +485,17 @@ cpSpaceSegmentQueryFirst(cpSpace *space, cpVect start, cpVect end, cpLayers laye
   } else {
 		out = &info;
 	}
-	
+
 	out->t = 1.0f;
-	
+
 	segQueryFirstContext context = {
 		start, end,
 		layers, group
 	};
-	
+
 	cpSpaceHashSegmentQuery(space->staticShapes, &context, start, end, 1.0f, (cpSpaceHashSegmentQueryFunc)segQueryFirst, out);
 	cpSpaceHashSegmentQuery(space->activeShapes, &context, start, end, out->t, (cpSpaceHashSegmentQueryFunc)segQueryFirst, out);
-	
+
 	return out->shape;
 }
 
@@ -508,7 +508,7 @@ typedef struct bbQueryContext {
 	void *data;
 } bbQueryContext;
 
-static void 
+static void
 bbQueryHelper(cpBB *bb, cpShape *shape, bbQueryContext *context)
 {
 	if(
@@ -549,7 +549,7 @@ cpSpaceResizeActiveHash(cpSpace *space, cpFloat dim, int count)
 	cpSpaceHashResize(space->activeShapes, dim, count);
 }
 
-void 
+void
 cpSpaceRehashStatic(cpSpace *space)
 {
 	cpSpaceHashEach(space->staticShapes, (cpSpaceHashIterator)&updateBBCache, NULL);
@@ -578,42 +578,42 @@ queryFunc(cpShape *a, cpShape *b, cpSpace *space)
 {
 	// Reject any of the simple cases
 	if(queryReject(a,b)) return;
-	
+
 	// Find the collision pair function for the shapes.
 	struct{cpCollisionType a, b;} ids = {a->collision_type, b->collision_type};
 	cpHashValue collHashID = CP_HASH_PAIR(a->collision_type, b->collision_type);
 	cpCollisionHandler *handler = (cpCollisionHandler *)cpHashSetFind(space->collFuncSet, collHashID, &ids);
-	
+
 	int sensor = a->sensor || b->sensor;
 	if(sensor && handler == &space->defaultHandler) return;
-	
+
 	// Shape 'a' should have the lower shape type. (required by cpCollideShapes() )
 	if(a->klass->type > b->klass->type){
 		cpShape *temp = a;
 		a = b;
 		b = temp;
 	}
-	
+
 	// Narrow-phase collision detection.
 	cpContact *contacts = NULL;
 	int numContacts = cpCollideShapes(a, b, &contacts);
 	if(!numContacts) return; // Shapes are not colliding.
-	
+
 	// Get an arbiter from space->contactSet for the two shapes.
 	// This is where the persistant contact magic comes from.
 	cpShape *shape_pair[] = {a, b};
 	cpHashValue arbHashID = CP_HASH_PAIR((size_t)a, (size_t)b);
 	cpArbiter *arb = (cpArbiter *)cpHashSetInsert(space->contactSet, arbHashID, shape_pair, NULL);
 	cpArbiterUpdate(arb, contacts, numContacts, handler, a, b); // retains the contacts array
-	
+
 	// Call the begin function first if it's the first step
 	if(arb->stamp == -1 && !handler->begin(arb, space, handler->data)){
 		cpArbiterIgnore(arb); // permanently ignore the collision until separation
 	}
-	
+
 	if(
 		// Ignore the arbiter if it has been flagged
-		(arb->state != cpArbiterStateIgnore) && 
+		(arb->state != cpArbiterStateIgnore) &&
 		// Call preSolve
 		handler->preSolve(arb, space, handler->data) &&
 		// Process, but don't add collisions for sensors.
@@ -625,7 +625,7 @@ queryFunc(cpShape *a, cpShape *b, cpSpace *space)
 		arb->contacts = NULL;
 		arb->numContacts = 0;
 	}
-	
+
 	// Time stamp the arbiter so we know it was used recently.
 	arb->stamp = space->stamp;
 }
@@ -642,18 +642,18 @@ static int
 contactSetFilter(cpArbiter *arb, cpSpace *space)
 {
 	int ticks = space->stamp - arb->stamp;
-	
+
 	// was used last frame, but not this one
 	if(ticks == 1){
 		arb->handler->separate(arb, space, arb->handler->data);
 		arb->stamp = -1; // mark it as a new pair again.
 	}
-	
+
 	if(ticks >= cp_contact_persistence){
 		cpArbiterFree(arb);
 		return 0;
 	}
-	
+
 	return 1;
 }
 
@@ -663,7 +663,7 @@ postStepCallbackSetFilter(postStepCallback *callback, cpSpace *space)
 {
 	callback->func(space, callback->obj, callback->data);
 	cpfree(callback);
-	
+
 	return 0;
 }
 
@@ -673,12 +673,12 @@ void
 cpSpaceStep(cpSpace *space, cpFloat dt)
 {
 	if(!dt) return; // don't step if the timestep is 0!
-	
+
 	cpFloat dt_inv = 1.0f/dt;
 
 	cpArray *bodies = space->bodies;
 	cpArray *constraints = space->constraints;
-	
+
 	// Empty the arbiter list.
 	space->arbiters->num = 0;
 
@@ -687,14 +687,14 @@ cpSpaceStep(cpSpace *space, cpFloat dt)
 		cpBody *body = (cpBody *)bodies->arr[i];
 		body->position_func(body, dt);
 	}
-	
+
 	// Pre-cache BBoxes and shape data.
 	cpSpaceHashEach(space->activeShapes, (cpSpaceHashIterator)updateBBCache, NULL);
-	
+
 	// Collide!
 	cpSpaceHashEach(space->activeShapes, (cpSpaceHashIterator)active2staticIter, space);
 	cpSpaceHashQueryRehash(space->activeShapes, (cpSpaceHashQueryFunc)queryFunc, space);
-	
+
 	// Clear out old cached arbiters and dispatch untouch functions
 	cpHashSetFilter(space->contactSet, (cpHashSetFilterFunc)contactSetFilter, space);
 
@@ -712,7 +712,7 @@ cpSpaceStep(cpSpace *space, cpFloat dt)
 	for(int i=0; i<space->elasticIterations; i++){
 		for(int j=0; j<arbiters->num; j++)
 			cpArbiterApplyImpulse((cpArbiter *)arbiters->arr[j], 1.0f);
-			
+
 		for(int j=0; j<constraints->num; j++){
 			cpConstraint *constraint = (cpConstraint *)constraints->arr[j];
 			constraint->klass->applyImpulse(constraint);
@@ -728,40 +728,40 @@ cpSpaceStep(cpSpace *space, cpFloat dt)
 
 	for(int i=0; i<arbiters->num; i++)
 		cpArbiterApplyCachedImpulse((cpArbiter *)arbiters->arr[i]);
-	
+
 	// run the old-style elastic solver if elastic iterations are disabled
 	cpFloat elasticCoef = (space->elasticIterations ? 0.0f : 1.0f);
-	
+
 	// Run the impulse solver.
 	for(int i=0; i<space->iterations; i++){
 		for(int j=0; j<arbiters->num; j++)
 			cpArbiterApplyImpulse((cpArbiter *)arbiters->arr[j], elasticCoef);
-			
+
 		for(int j=0; j<constraints->num; j++){
 			cpConstraint *constraint = (cpConstraint *)constraints->arr[j];
 			constraint->klass->applyImpulse(constraint);
 		}
 	}
-	
+
 	// run the post solve callbacks
 	for(int i=0; i<arbiters->num; i++){
 		cpArbiter *arb = arbiters->arr[i];
-		
+
 		cpCollisionHandler *handler = arb->handler;
 		handler->postSolve(arb, space, handler->data);
-		
+
 		arb->state = cpArbiterStateNormal;
 	}
-	
+
 	// Run the post step callbacks
 	// Use filter as an easy way to clear out the queue as it runs
 	cpHashSetFilter(space->postStepCallbacks, (cpHashSetFilterFunc)postStepCallbackSetFilter, space);
-	
+
 //	cpFloat dvsq = cpvdot(space->gravity, space->gravity);
 //	dvsq *= dt*dt * space->damping*space->damping;
 //	for(int i=0; i<bodies->num; i++)
 //		cpBodyMarkLowEnergy(bodies->arr[i], dvsq, space->sleepTicks);
-	
+
 	// Increment the stamp.
 	space->stamp++;
 }

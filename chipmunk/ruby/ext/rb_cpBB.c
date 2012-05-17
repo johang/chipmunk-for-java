@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -42,7 +42,7 @@ rb_cpBBInitialize(VALUE self, VALUE l, VALUE b, VALUE r, VALUE t)
 	bb->b = NUM2DBL(b);
 	bb->r = NUM2DBL(r);
 	bb->t = NUM2DBL(t);
-	
+
 	return self;
 }
 
@@ -122,9 +122,9 @@ rb_cpBBToString(VALUE self)
 {
 	char str[256];
 	cpBB *bb = BBGET(self);
-	
+
 	sprintf(str, "#<CP::BB:(% .3f, % .3f) -> (% .3f, % .3f)>", bb->l, bb->b, bb->r, bb->t);
-	
+
 	return rb_str_new2(str);
 }
 
@@ -134,7 +134,7 @@ Init_cpBB(void)
 	c_cpBB = rb_define_class_under(m_Chipmunk, "BB", rb_cObject);
 	rb_define_alloc_func(c_cpBB, rb_cpBBAlloc);
 	rb_define_method(c_cpBB, "initialize", rb_cpBBInitialize, 4);
-	
+
 	rb_define_method(c_cpBB, "l", rb_cpBBGetL, 0);
 	rb_define_method(c_cpBB, "b", rb_cpBBGetB, 0);
 	rb_define_method(c_cpBB, "r", rb_cpBBGetR, 0);
@@ -150,6 +150,6 @@ Init_cpBB(void)
 	//containsVect
 	rb_define_method(c_cpBB, "clamp_vect", rb_cpBBClampVect, 1);
 	rb_define_method(c_cpBB, "wrap_vect", rb_cpBBWrapVect, 1);
-	
+
 	rb_define_method(c_cpBB, "to_s", rb_cpBBToString, 0);
 }

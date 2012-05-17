@@ -1,15 +1,15 @@
 /* Copyright (c) 2007 Scott Lembcke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,10 +18,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 /*
 	IMPORTANT - READ ME!
-	
+
 	This file sets up a simple interface that the individual demos can use to get
 	a Chipmunk space running and draw what's in it. In order to keep the Chipmunk
 	examples clean and simple, they contain no graphics code. All drawing is done
@@ -30,7 +30,7 @@
 	beyond simple shape drawing and is very dependent on implementation details
 	about Chipmunk which may change with little to no warning.
 */
- 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -134,7 +134,7 @@ drawString(int x, int y, char *str)
 {
 	glColor3f(0.0f, 0.0f, 0.0f);
 	glRasterPos2i(x, y);
-	
+
 	for(int i=0, len=strlen(str); i<len; i++){
 		if(str[i] == '\n'){
 			y -= 16;
@@ -170,30 +170,30 @@ drawInfo()
 {
 	int arbiters = space->arbiters->num;
 	int points = 0;
-	
+
 	for(int i=0; i<arbiters; i++)
 		points += ((cpArbiter *)(space->arbiters->arr[i]))->numContacts;
-	
+
 	int constraints = (space->constraints->num + points)*(space->iterations + space->elasticIterations);
-	
+
 	maxArbiters = arbiters > maxArbiters ? arbiters : maxArbiters;
 	maxPoints = points > maxPoints ? points : maxPoints;
 	maxConstraints = constraints > maxConstraints ? constraints : maxConstraints;
-	
+
 	char buffer[1000];
-	char *format = 
+	char *format =
 		"Arbiters: %d (%d) - "
 		"Contact Points: %d (%d)\n"
 		"Other Constraints: %d, Iterations: %d\n"
 		"Constraints x Iterations: %d (%d)";
-	
+
 	snprintf(buffer, 1000, format,
 		arbiters, maxArbiters,
 		points, maxPoints,
 		space->constraints->num, space->iterations + space->elasticIterations,
 		constraints, maxConstraints
 	);
-	
+
 	drawString(0, 220, buffer);
 }
 
@@ -201,15 +201,15 @@ static void
 display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	
+
 	drawSpace(space, currDemo->drawOptions ? currDemo->drawOptions : &options);
 	drawInstructions();
 	drawInfo();
 	drawString(-300, -210, messageString);
-		
+
 	glutSwapBuffers();
 	ticks++;
-	
+
 	cpVect newPoint = cpvlerp(mousePoint_last, mousePoint, 0.25f);
 	mouseBody->p = newPoint;
 	mouseBody->v = cpvmult(cpvsub(newPoint, mousePoint_last), 60.0f);
@@ -222,7 +222,7 @@ demoTitle(chipmunkDemo *demo)
 {
 	static char title[1024];
 	sprintf(title, "Demo: %s", demo->name);
-	
+
 	return title;
 }
 
@@ -231,7 +231,7 @@ runDemo(chipmunkDemo *demo)
 {
 	if(currDemo)
 		currDemo->destroyFunc();
-		
+
 	currDemo = demo;
 	ticks = 0;
 	mouseJoint = NULL;
@@ -248,7 +248,7 @@ static void
 keyboard(unsigned char key, int x, int y)
 {
 	int index = key - 'a';
-	
+
 	if(0 <= index && index < demoCount){
 		runDemo(demos[index]);
 	} else if(key == '\r'){
@@ -272,16 +272,16 @@ mouseToSpace(int x, int y)
 {
 	GLdouble model[16];
 	glGetDoublev(GL_MODELVIEW_MATRIX, model);
-	
+
 	GLdouble proj[16];
 	glGetDoublev(GL_PROJECTION_MATRIX, proj);
-	
+
 	GLint view[4];
 	glGetIntegerv(GL_VIEWPORT, view);
-	
+
 	GLdouble mx, my, mz;
 	gluUnProject(x, glutGet(GLUT_WINDOW_HEIGHT) - y, 0.0f, model, proj, view, &mx, &my, &mz);
-	
+
 	return cpv(mx, my);
 }
 
@@ -297,7 +297,7 @@ click(int button, int state, int x, int y)
 	if(button == GLUT_LEFT_BUTTON){
 		if(state == GLUT_DOWN){
 			cpVect point = mouseToSpace(x, y);
-		
+
 			cpShape *shape = cpSpacePointQueryFirst(space, point, GRABABLE_MASK_BIT, 0);
 			if(shape){
 				cpBody *body = shape->body;
@@ -318,7 +318,7 @@ static void
 timercall(int value)
 {
 	glutTimerFunc(SLEEP_TICKS, timercall, 0);
-		
+
 	glutPostRedisplay();
 }
 
@@ -326,12 +326,12 @@ static void
 set_arrowDirection()
 {
 	int x = 0, y = 0;
-	
+
 	if(key_up) y += 1;
 	if(key_down) y -= 1;
 	if(key_right) x += 1;
 	if(key_left) x -= 1;
-	
+
 	arrowDirection = cpv(x, y);
 }
 
@@ -372,7 +372,7 @@ initGL(void)
 	glLoadIdentity();
 	glOrtho(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
 	glTranslatef(0.5f, 0.5f, 0.0f);
-	
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 }
 
@@ -380,21 +380,21 @@ static void
 glutStuff(int argc, const char *argv[])
 {
 	glutInit(&argc, (char**)argv);
-	
+
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-	
+
 	glutInitWindowSize(640, 480);
 	glutCreateWindow(demoTitle(demos[firstDemoIndex]));
-	
+
 	initGL();
-	
+
 	glutDisplayFunc(display);
 //	glutIdleFunc(idle);
 	glutTimerFunc(SLEEP_TICKS, timercall, 0);
 
 	glutIgnoreKeyRepeat(1);
 	glutKeyboardFunc(keyboard);
-	
+
 	glutSpecialFunc(arrowKeyDownFunc);
 	glutSpecialUpFunc(arrowKeyUpFunc);
 
@@ -408,19 +408,19 @@ glutStuff(int argc, const char *argv[])
 //{
 //	currDemo = demos[index];
 //	space = currDemo->initFunc();
-//	
+//
 //	struct timeval start_time, end_time;
 //	gettimeofday(&start_time, NULL);
-//	
+//
 //	for(int i=0; i<count; i++)
 //		currDemo->updateFunc(i);
-//	
+//
 //	gettimeofday(&end_time, NULL);
 //	long millisecs = (end_time.tv_sec - start_time.tv_sec)*1000;
 //	millisecs += (end_time.tv_usec - start_time.tv_usec)/1000;
-//	
+//
 //	currDemo->destroyFunc();
-//	
+//
 //	printf("Time(%c) = %ldms\n", index + 'a', millisecs);
 //}
 
@@ -428,16 +428,16 @@ int
 main(int argc, const char **argv)
 {
 	cpInitChipmunk();
-	
+
 //	for(int i=0; i<demoCount; i++)
 //		time_trial(i, 1000);
 //	time_trial('d' - 'a', 10000);
 //	exit(0);
-	
+
 	mouseBody = cpBodyNew(INFINITY, INFINITY);
-	
+
 	glutStuff(argc, argv);
-	
+
 	runDemo(demos[firstDemoIndex]);
 	glutMainLoop();
 
